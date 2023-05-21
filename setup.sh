@@ -10,54 +10,51 @@
 
 
 
-# Check if cifs-utils is installed
+# Set color variables
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+red=$(tput setaf 1)
+bold=$(tput bold)
+reset=$(tput sgr0)
+
+# Check if cifs-utils is installed, if not install it
 if ! dpkg -s cifs-utils >/dev/null 2>&1; then
-  echo "Installing cifs-utils..."
-  sudo apt-get update
-  sudo apt-get install cifs-utils -y
+    echo "${yellow}Installing cifs-utils...${reset}"
+    sudo apt-get update
+    sudo apt-get install cifs-utils -y
 else
-  echo "cifs-utils is already installed."
+    echo "${green}cifs-utils is already installed.${reset}"
 fi
 
-# Check if git is installed
+# Check if git is installed, if not install it
 if ! dpkg -s git >/dev/null 2>&1; then
-  echo "Installing git..."
-  sudo apt-get update
-  sudo apt-get install git -y
+    echo "${yellow}Installing git...${reset}"
+    sudo apt-get install git -y
 else
-  echo "git is already installed."
+    echo "${green}git is already installed.${reset}"
 fi
 
-# Clone the repository
-if [ ! -d "Logbackup" ]; then
-  echo "Cloning Logbackup repository..."
-  git clone https://github.com/CyberOneTechnologies/Logbackup.git
-else
-  echo "Logbackup repository is already cloned."
-fi
+# Clone Logbackup repository
+echo "${yellow}Cloning Logbackup repository...${reset}"
+git clone https://github.com/CyberOneTechnologies/Logbackup.git
 
-# Determine the location of logbackup.sh
-if [ -f "Logbackup/logbackup.sh" ]; then
-  logbackup_path="Logbackup/logbackup.sh"
-elif [ -f "./logbackup.sh" ]; then
-  logbackup_path="./logbackup.sh"
-else
-  echo "Could not find logbackup.sh. Please ensure it's in the current directory or in a Logbackup subdirectory."
-  exit 1
-fi
+# Prompt user for the local folder name to use for the mount point
+echo "${yellow}What is the name of the local folder to use for the mount point?${reset}"
+read local_folder
+
+# Change directory to the cloned Logbackup repository
+cd Logbackup
+
+# Replace 'network_drive' in logbackup.sh with the inputted local_folder
+sed -i "s/network_drive/$local_folder/g" logbackup.sh
 
 # Copy the logbackup.sh script to /usr/local/sbin
 echo "Moving logbackup.sh to /usr/local/sbin..."
-sudo cp $logbackup_path /usr/local/sbin/logbackup.sh
+sudo cp logbackup.sh /usr/local/sbin/logbackup.sh
 sudo chmod +x /usr/local/sbin/logbackup.sh
 
-# Add logbackup.sh to crontab if it's not already scheduled
-if ! crontab -l | grep -q "logbackup.sh"; then
-  echo "Adding logbackup.sh to crontab..."
-  (crontab -l 2>/dev/null; echo "0 23 * * * /usr/local/sbin/logbackup.sh") | crontab -
-fi
+# Add logbackup.sh to crontab
+echo "${yellow}Adding logbackup.sh to crontab...${reset}"
+(crontab -l ; echo "0 23 * * * /usr/local/sbin/logbackup.sh") | crontab -
 
-echo "Setup completed."
-
-# Run logbackup.sh
-/usr/local/sbin/logbackup.sh
+echo "${green}${bold}Setup completed.${reset}"
