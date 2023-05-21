@@ -9,6 +9,7 @@
 #	░╚════╝░░░░╚═╝░░░╚═════╝░╚══════╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚══╝╚══════╝
 
 
+
 # Check if cifs-utils is installed
 if ! dpkg -s cifs-utils >/dev/null 2>&1; then
   echo "Installing cifs-utils..."
@@ -47,3 +48,6 @@ if ! crontab -l | grep -q "logbackup.sh"; then
 fi
 
 echo "Setup completed."
+
+# Run logbackup.sh
+/usr/local/sbin/logbackup.sh
