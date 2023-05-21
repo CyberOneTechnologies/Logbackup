@@ -36,9 +36,19 @@ else
   echo "Logbackup repository is already cloned."
 fi
 
+# Determine the location of logbackup.sh
+if [ -f "Logbackup/logbackup.sh" ]; then
+  logbackup_path="Logbackup/logbackup.sh"
+elif [ -f "./logbackup.sh" ]; then
+  logbackup_path="./logbackup.sh"
+else
+  echo "Could not find logbackup.sh. Please ensure it's in the current directory or in a Logbackup subdirectory."
+  exit 1
+fi
+
 # Copy the logbackup.sh script to /usr/local/sbin
 echo "Moving logbackup.sh to /usr/local/sbin..."
-sudo cp Logbackup/logbackup.sh /usr/local/sbin/logbackup.sh
+sudo cp $logbackup_path /usr/local/sbin/logbackup.sh
 sudo chmod +x /usr/local/sbin/logbackup.sh
 
 # Add logbackup.sh to crontab if it's not already scheduled
