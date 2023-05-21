@@ -67,7 +67,7 @@ echo "${green}Backup process completed.${reset}"
 echo "${blue}Setting up daily job...${reset}"
 script_path=$(realpath $0)
 sudo mv $script_path /usr/local/sbin/logbackup.sh
-(sudo crontab -l 2>/dev/null; echo "0 23 * * * /usr/local/sbin/logbackup.sh") | sudo crontab -
+echo "0 23 * * * /usr/local/sbin/logbackup.sh" >> /etc/crontab
 echo "${green}Setup completed. The script will now run every day at 2300.${reset}"
 
 
