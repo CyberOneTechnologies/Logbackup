@@ -2,6 +2,10 @@
 LogBackup is a bash script designed for automatic backup of log files on Ubuntu Linux servers. This script archives the /var/log directory, stores the archive in a local directory, then moves it to a network drive. The script also manages the backup archives by deleting any that are older than 6 months.
 
 ## Getting Started
+
+> **Please Note:** Running this as root is the only way for it to automatically update the crontab. If you run as a user with sudo then crontab won't update and the file will not be moved to your PATH list automatically. It is advised to run as root to avoid additional configurations.
+
+
 ### Prerequisites
 You must have root access on your server to use this script.
 
