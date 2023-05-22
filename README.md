@@ -1,5 +1,5 @@
 # Log Backup Automation Scripts
-This repository contains two bash scripts: `**logbackup.sh**` and `**setup.sh**`, designed to automate the process of creating and maintaining log backups.
+This repository contains two bash scripts: **`logbackup.sh`** and **`setup.sh`**, designed to automate the process of creating and maintaining log backups.
 
 ## Getting Started
 
