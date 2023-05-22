@@ -96,8 +96,8 @@ Please note that the script only needs to be run once for setup. It will automat
 - **No Space Left on Device:** This might happen if your log directory is too large. Ensure that you have enough space on your device before running the script.
 - **Network Drive Unreachable:** The script doesn't handle network issues. Please ensure that the network drive is reachable and the path you provided is correct.
 
-### Contributing
+# Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-## License
-### MIT
+# License
+## MIT
