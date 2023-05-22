@@ -25,13 +25,13 @@ cd Logbackup
 Ensure that the script file is executable:
 
 ```
-chmod +x logbackup.sh
+chmod +x setup.sh
 ```
 
 Run the script. This will move the script to /usr/local/sbin and set up a daily cron job to run the script at 2300:
 
 ```
-sudo ./logbackup.sh
+sudo ./setup.sh
 ```
 
 
