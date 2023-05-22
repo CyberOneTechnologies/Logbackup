@@ -1,5 +1,5 @@
 # Log Backup Automation Scripts
-This repository contains two bash scripts: **logbackup.sh** and **setup.sh**, designed to automate the process of creating and maintaining log backups.
+This repository contains two bash scripts: `**logbackup.sh**` and `**setup.sh**`, designed to automate the process of creating and maintaining log backups.
 
 ## Getting Started
 
@@ -7,10 +7,17 @@ This repository contains two bash scripts: **logbackup.sh** and **setup.sh**, de
 
 
 # 1. Script Overview
+### logbackup.sh
 - This script compresses the `/var/log directory`, creates a backup, and moves it to a predefined network drive.
 - It also removes backups that are older than 180 days from the network drive.
 
-### logbackup.sh
+### setup.sh
+- This script is responsible for the initial setup of the system.
+- It installs required packages, sets up the network drive, and schedules the `logbackup.sh` script to run daily using crontab.
+
+
+
+
 Clone the repository:
 
 ```
