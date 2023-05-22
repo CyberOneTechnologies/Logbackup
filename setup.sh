@@ -116,7 +116,7 @@ sudo chmod +x /usr/local/sbin/logbackup.sh
 
 # Add logbackup.sh to crontab if it's not already scheduled
 echo "Adding Logging Backup process to Crontab to schedule process"
-echo "0 23 * * * /usr/local/sbin/logbackup.sh") >> crontab
+echo "0 23 * * * /usr/local/sbin/logbackup.sh") >> /etc/crontab
 
 
 
