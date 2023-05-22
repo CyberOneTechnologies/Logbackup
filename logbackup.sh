@@ -47,6 +47,7 @@
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 blue=$(tput setaf 4)
+red=$(tput setaf 1)
 reverse=$(tput rev)
 bold=$(tput bold)
 reset=$(tput sgr0)
