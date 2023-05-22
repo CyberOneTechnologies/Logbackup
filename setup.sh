@@ -124,5 +124,5 @@ echo "0 23 * * * /usr/local/sbin/logbackup.sh" >> /etc/crontab
 echo "Setup completed."
 
 # Run logbackup.sh
-echo "Running the script the first
+echo "Running the script the first"
 /usr/local/sbin/logbackup.sh
