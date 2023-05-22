@@ -8,17 +8,17 @@ This repository contains two bash scripts: **`logbackup.sh`** and **`setup.sh`**
 
 # 1. Script Overview
 ### logbackup.sh
-- This script compresses the `/var/log directory`, creates a backup, and moves it to a predefined network drive.
+- This script compresses the **`/var/log directory`**, creates a backup, and moves it to a predefined network drive.
 - It also removes backups that are older than 180 days from the network drive.
 
 ### setup.sh
 - This script is responsible for the initial setup of the system.
-- It installs required packages, sets up the network drive, and schedules the `logbackup.sh` script to run daily using crontab.
+- It installs required packages, sets up the network drive, and schedules the **`logbackup.sh`** script to run daily using crontab.
 
 
-
-
-Clone the repository:
+# 2. Usage
+## 2.1 Cloning the repository
+Firstly, clone the repository to your local system using the following command:
 
 ```
 git clone https://github.com/CyberOneTechnologies/Logbackup.git
@@ -35,15 +35,54 @@ Ensure that the script file is executable:
 ```
 chmod +x setup.sh
 ```
+## 2.2 Configuration
+Before running the setup.sh script, the script will prompt you for the following inputs:
 
-Run the script. This will move the script to /usr/local/sbin and set up a daily cron job to run the script at 2300:
+- The network share drive (i.e., **`//192.168.1.10/logs`**)
+- The name of the local folder to use as a mount point.
+These inputs will be used to configure your specific backup system. If the network drive or local folder does not exist, the script will attempt to create it.
+
+
+## 2.3 Running the Scripts
+To run the setup.sh script, navigate to the directory containing the scripts and use the following command:
 
 ```
 sudo ./setup.sh
 ```
 
+After running the **`setup.sh script`**, the logbackup.sh script will be scheduled to run daily. It will also be copied to **`/usr/local/sbin/logbackup.sh`**.
 
-## Usage
+The **`logbackup.sh`** script can also be run manually by executing the following command:
+```
+/usr/local/sbin/logbackup.sh
+```
+
+This will immediately create a backup and move it to the network drive, as well as delete any backups older than 180 days.
+
+
+# 3. Dependencies
+The **`setup.sh`** script checks if **`cifs-utils`** and **`git`** are installed. If they are not, it will attempt to install these packages.
+
+**`cifs-utils`** is required for mounting network file systems, while **`git`** is required to clone and update the repository.
+
+
+# 4. Crontab Setup
+The **`setup.sh`** script sets up a daily cron job to run the **`logbackup.sh`** script at 11 PM server time. The cron entry is added to the **`/etc/crontab file`**.
+
+
+# 5. Error Handling
+The scripts include basic error handling. For instance, if the network drive fails to mount during the setup, the setup.sh script will terminate and display an error message.
+
+# 6. Output
+The scripts output informational messages in color, indicating the progress of the operations being performed. Green text signifies successful operations, yellow text is for informational messages, and red text is for error messages.
+
+Please make sure to check these messages to ensure the scripts have executed successfully.
+
+# 7. Conclusion
+These scripts provide a straightforward and automated way to handle log backups. They are particularly useful for Linux administrators looking for an efficient way to maintain backups of important system logs.
+
+
+# Usage
 The script will ask for the following inputs when run:
 
 - **Network Share Drive:** The script will prompt you to enter the network share drive path (e.g., //192.168.1.10/logs).
