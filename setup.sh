@@ -48,6 +48,7 @@
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 blue=$(tput setaf 4)
+red=$(tput setaf 1)
 reverse=$(tput rev)
 bold=$(tput bold)
 reset=$(tput sgr0)
@@ -102,7 +103,7 @@ if ! grep -qs $mount_point /proc/mounts; then
     echo "${network_drive}	${mount_point}	cifs	guest,uid=1000,iocharset=utf8	0	0" | sudo tee -a /etc/fstab > /dev/null
     sudo mount -a
     if [ $? -eq 0 ]; then
-        echo "${green}Network drive mounted successfully.${reset}"
+        echo "${green}Network drive mounted successfully.:${reset}"
     else
         echo "${red}Failed to mount the network drive. Please check your settings and try again.${reset}"
         exit 1
@@ -116,13 +117,13 @@ sudo cp logbackup.sh /usr/local/sbin/logbackup.sh
 sudo chmod +x /usr/local/sbin/logbackup.sh
 
 # Add logbackup.sh to crontab if it's not already scheduled
-echo "Adding Logging Backup process to Crontab to schedule process"
-echo "0 23 * * * /usr/local/sbin/logbackup.sh" >> /etc/crontab
+echo "${blue}Adding Logging Backup process to Crontab to schedule process.:${reset}"
+echo "0 23 * * * root /usr/local/sbin/logbackup.sh" >> /etc/crontab
 
 
 
 echo "Setup completed."
 
 # Run logbackup.sh
-echo "Running the script the first"
+echo "${green}Running the script the first time...:${reset}"
 /usr/local/sbin/logbackup.sh
