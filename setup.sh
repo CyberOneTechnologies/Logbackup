@@ -98,7 +98,8 @@ mount_point="/mnt/$local_folder"
 if ! grep -qs $mount_point /proc/mounts; then
     echo "${blue}Mounting the network drive...:${reset}"
     sudo mkdir -p $mount_point
-    echo "${network_drive}    ${mount_point}    cifs    guest,uid=1000,iocharset=utf8    0    0" | sudo tee -a /etc/fstab > /dev/null
+	sudo mount -t cifs ${network_drive} ${mount_point}
+    echo "${network_drive}	${mount_point}	cifs	guest,uid=1000,iocharset=utf8	0	0" | sudo tee -a /etc/fstab > /dev/null
     sudo mount -a
     if [ $? -eq 0 ]; then
         echo "${green}Network drive mounted successfully.${reset}"
@@ -116,7 +117,7 @@ sudo chmod +x /usr/local/sbin/logbackup.sh
 
 # Add logbackup.sh to crontab if it's not already scheduled
 echo "Adding Logging Backup process to Crontab to schedule process"
-echo "0 23 * * * /usr/local/sbin/logbackup.sh") >> /etc/crontab
+echo "0 23 * * * /usr/local/sbin/logbackup.sh") >> crontab
 
 
 
