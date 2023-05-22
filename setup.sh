@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 ####################################################################################
 #░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░LogBackup░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░#
 #░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░Developed by Aarsyth░░░░░░░░░░░░░░░░░░░░░░░░░░░░#
@@ -41,6 +42,8 @@
 #░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░#
 ####################################################################################
 
+
+
 # Set color variables for better readability
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
@@ -71,17 +74,6 @@ else
 fi
 
 
-# Copy the logbackup.sh script to /usr/local/sbin
-echo "Moving logbackup.sh to /usr/local/sbin..."
-sudo cp logbackup.sh /usr/local/sbin/logbackup.sh
-sudo chmod +x /usr/local/sbin/logbackup.sh
-
-# Add logbackup.sh to crontab if it's not already scheduled
-echo "Adding Logging Backup process to Crontab to schedule process"
-echo "0 23 * * * /usr/local/sbin/logbackup.sh") >> crontab
-
-
-
 # Prompt for network drive
 echo "${green}What is the network share drive? (i.e. //192.168.1.10/logs):${reset}"
 read network_drive
@@ -95,10 +87,16 @@ local_folder=${local_folder:-BackupLogs}
 echo "${blue}Creating a mount point for the drive...:${reset}"
 mkdir -p /mnt/$local_folder
 
+# Update the LogBackup.sh file with the local variable so it can run autonomously after setup.
+echo "${yellow}Setting the mount point in logbackup.sh file :${reset}"
+sed -i "s/MNT_DRIVE/$local_folder/g" ./logbackup.sh
+
+
+
 # Mount the network drive if it isn't already
 mount_point="/mnt/$local_folder"
 if ! grep -qs $mount_point /proc/mounts; then
-    echo "${blue}Mounting the network drive...${reset}"
+    echo "${blue}Mounting the network drive...:${reset}"
     sudo mkdir -p $mount_point
     echo "${network_drive}    ${mount_point}    cifs    guest,uid=1000,iocharset=utf8    0    0" | sudo tee -a /etc/fstab > /dev/null
     sudo mount -a
@@ -109,6 +107,17 @@ if ! grep -qs $mount_point /proc/mounts; then
         exit 1
     fi
 fi
+
+
+# Copy the logbackup.sh script to /usr/local/sbin
+echo "Moving logbackup.sh to /usr/local/sbin..."
+sudo cp logbackup.sh /usr/local/sbin/logbackup.sh
+sudo chmod +x /usr/local/sbin/logbackup.sh
+
+# Add logbackup.sh to crontab if it's not already scheduled
+echo "Adding Logging Backup process to Crontab to schedule process"
+echo "0 23 * * * /usr/local/sbin/logbackup.sh") >> crontab
+
 
 
 echo "Setup completed."
