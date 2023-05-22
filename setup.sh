@@ -55,23 +55,23 @@ reset=$(tput sgr0)
 
 
 # Check if cifs-utils is installed
-echo "Checking if cifs-utils is installed...."
+echo "${green}Checking if cifs-utils is installed....:${reset}"
 if ! dpkg -s cifs-utils >/dev/null 2>&1; then
-  echo "Installing cifs-utils..."
+  echo "${red}Installing cifs-utils...:${reset}"
   sudo apt-get update
   sudo apt-get install cifs-utils -y
 else
-  echo "cifs-utils is already installed."
+  echo "${green}cifs-utils is already installed.:${reset}"
 fi
 
 # Check if git is installed
-echo "Checking if git is installed....."
+echo "${green}Checking if git is installed.....:${reset}"
 if ! dpkg -s git >/dev/null 2>&1; then
-  echo "Installing git..."
+  echo "${red}Installing git...:${reset}"
   sudo apt-get update
   sudo apt-get install git -y
 else
-  echo "git is already installed."
+  echo "${green}git is already installed.:${reset}"
 fi
 
 
@@ -105,14 +105,14 @@ if ! grep -qs $mount_point /proc/mounts; then
     if [ $? -eq 0 ]; then
         echo "${green}Network drive mounted successfully.:${reset}"
     else
-        echo "${red}Failed to mount the network drive. Please check your settings and try again.${reset}"
+        echo "${red}Failed to mount the network drive. Please check your settings and try again.:${reset}"
         exit 1
     fi
 fi
 
 
 # Copy the logbackup.sh script to /usr/local/sbin
-echo "Moving logbackup.sh to /usr/local/sbin..."
+echo "${green}Moving logbackup.sh to /usr/local/sbin...:${reset}"
 sudo cp logbackup.sh /usr/local/sbin/logbackup.sh
 sudo chmod +x /usr/local/sbin/logbackup.sh
 
@@ -122,8 +122,8 @@ echo "0 23 * * * root /usr/local/sbin/logbackup.sh" >> /etc/crontab
 
 
 
-echo "Setup completed."
+echo "${green}Setup completed!!:${reset}"
 
 # Run logbackup.sh
-echo "${green}Running the script the first time...:${reset}"
+echo "${blue}Running the script the first time...:${reset}"
 /usr/local/sbin/logbackup.sh
