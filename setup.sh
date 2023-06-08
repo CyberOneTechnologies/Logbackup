@@ -44,72 +44,60 @@
 
 
 
+# Color setup
+green=`tput setaf 2`
+blue=`tput setaf 4`
+red=`tput setaf 1`
+bold=`tput bold`
+reset=`tput sgr0`
 
-# Define color codes
-red='\033[1;31m'
-reset='\033[0m'
-
-# Check if the script is run as root
-if [ "$(id -u)" -ne 0 ]; then
-    echo -e "${red}This script must be run as root. Please switch to root user using 'sudo su'.${reset}"
+# Check if the user is root
+if [ "$(id -u)" != "0" ]; then
+    echo "${bold}${red}This script must be run as root. Use sudo su to switch to root user.${reset}"
     exit 1
 fi
 
 # Check if cifs-utils is installed
-if ! dpkg -l | grep -q cifs-utils; then
-    echo "Installing cifs-utils..."
-    apt-get update && apt-get install -y cifs-utils
+if ! command -v mount.cifs > /dev/null; then
+    echo "${blue}Installing cifs-utils...${reset}"
+    sudo apt-get update
+    sudo apt-get install cifs-utils -y
 else
     echo "cifs-utils is already installed."
 fi
 
-# Check if git is installed
-if ! dpkg -l | grep -q git; then
-    echo "Installing git..."
-    apt-get update && apt-get install -y git
-else
-    echo "git is already installed."
-fi
-
-# Clone the repository
-echo "Cloning Logbackup repository..."
-if [ ! -d "Logbackup" ]; then
-    git clone https://github.com/CyberOneTechnologies/Logbackup.git
-else
-    echo "Logbackup repository already exists."
-fi
-
 # Prompt for local folder name
-echo "What is the name of the local folder to use for the mount point?"
+echo "${green}What is the name of the local folder to use as a mount folder?:${reset}"
 read local_folder
 local_folder=${local_folder:-BackupLogs}
 
 # Create the local_folder if it doesn't exist
-echo "Creating a mount point for the drive..."
+echo "${blue}Creating a mount point for the drive...${reset}"
 mkdir -p /mnt/$local_folder
 
-# Substitute MNT_DRIVE with the local_folder name in logbackup.sh
-sed -i "s|MNT_DRIVE|/mnt/$local_folder|g" Logbackup/logbackup.sh
+# Prompt for the network share drive
+echo "${green}What is the network share drive? (i.e. //192.168.1.10/logs):${reset}"
+read network_share_drive
 
-# Copy the logbackup.sh script to /usr/local/sbin
-echo "Moving logbackup.sh to /usr/local/sbin..."
-cp Logbackup/logbackup.sh /usr/local/sbin/logbackup.sh
-chmod +x /usr/local/sbin/logbackup.sh
+# Mount the network share drive
+echo "${blue}Mounting the network drive...${reset}"
+sudo mount -t cifs $network_share_drive /mnt/$local_folder
 
-# Add logbackup.sh to crontab to run every day at midnight
-(crontab -l 2>/dev/null; echo "0 0 * * * /usr/local/sbin/logbackup.sh") | crontab -
+# Update the logbackup.sh script to replace "MNT_DRIVE" with $local_folder
+echo "${blue}Updating the logbackup.sh script...${reset}"
+sed -i "s|MNT_DRIVE|${local_folder}|g" logbackup.sh
 
-echo "Setup completed."
+# Move the logbackup.sh script to /usr/local/sbin
+echo "${blue}Moving logbackup.sh to /usr/local/sbin...${reset}"
+sudo mv logbackup.sh /usr/local/sbin/logbackup.sh
 
+# Make the script executable
+echo "${blue}Making the script executable...${reset}"
+sudo chmod +x /usr/local/sbin/logbackup.sh
 
-# Add logbackup.sh to crontab if it's not already scheduled
-echo "${blue}Adding Logging Backup process to Crontab to schedule process.:${reset}"
-echo "0 23 * * * root /usr/local/sbin/logbackup.sh" >> /etc/crontab
+# Add logbackup.sh to the root user's crontab to run daily at 3 AM
+echo "${blue}Adding logbackup.sh to crontab...${reset}"
+echo "0 3 * * * /usr/local/sbin/logbackup.sh" | crontab -
 
+echo "${green}Setup completed.${reset}"
 
-
-echo "${green}Setup completed!!:${reset}"
-
-# Run logbackup.sh
-echo "${blue}Running the script the first time...:${reset}"
-/usr/local/sbin/logbackup.sh
