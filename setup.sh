@@ -97,7 +97,7 @@ sudo chmod +x /usr/local/sbin/logbackup.sh
 
 # Add logbackup.sh to the root user's crontab to run daily at 3 AM
 echo "${blue}Adding logbackup.sh to crontab...${reset}"
-echo "0 3 * * * /usr/local/sbin/logbackup.sh" | crontab -
+echo "0 3 * * * root /usr/local/sbin/logbackup.sh" >> /etc/crontab
 
 echo "${green}Setup completed.${reset}"
 
